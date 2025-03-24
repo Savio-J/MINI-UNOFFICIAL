@@ -1,0 +1,492 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Kerala Explorer Points
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
+       color: black; /* Set default text color to black */
+   }
+   .hidden {
+            display: none;
+        }
+        .slide-in {
+            animation: slide-in 0.5s forwards;
+        }
+        @keyframes slide-in {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        .pop-out {
+            transition: transform 0.2s;
+        }
+        .pop-out:hover {
+            transform: scale(1.05);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px); /* Start from below */
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0); /* End at original position */
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateY(0); /* Start at original position */
+                opacity: 1;
+            }
+            to {
+                transform: translateY(20px); /* Move down */
+                opacity: 0;
+            }
+        }
+        .slide-in {
+            animation: slideIn 0.5s forwards; /* Animation for showing */
+        }
+        .slide-out {
+            animation: slideOut 0.5s forwards; /* Animation for hiding */
+        }
+  </style>
+ </head>
+ {% extends 'base.html' %}
+
+ {% block title %}Kerala Travel Blog{% endblock %}
+ 
+ {% block content %}
+ <body class="bg-[#151F29] font-sans">
+  <div class="container mx-auto p-4">
+   <div class="flex flex-col lg:flex-row gap-4">
+    <!-- Left Column -->
+    <div class="flex-1">
+     <div class="bg-white p-4 rounded-lg shadow">
+      <div class="flex items-center mb-4">
+       <i class="fas fa-map-marker-alt text-blue-500 text-2xl mr-2">
+       </i>
+       <h1 class="text-black text-xl font-semibold">
+        Kerala Explorer Points
+       </h1>
+      </div>
+      <div class="flex items-center justify-between mb-4">
+       <div>
+        <h2 class="text-black text-4xl font-bold" id="available-points">
+         1000
+        </h2>
+        <p class="text-gray-500">
+         Available Points
+        </p>
+       </div>
+       <div class="text-center">
+        <p class="text-green-500 font-semibold">
+         Level 25
+        </p>
+        <p class="text-gray-500">
+         1250 points to Level 26
+        </p>
+       </div>
+       <div class="text-center">
+        <p class="text-blue-500 font-semibold">
+         Rewards
+        </p>
+        <p class="text-gray-500">
+         Redeem for Kerala experiences
+        </p>
+       </div>
+      </div>
+      <div class="bg-blue-500 h-2 rounded-full mb-4">
+       <div class="bg-blue-700 h-2 rounded-full" style="width: 50%;">
+       </div>
+      </div>
+      <div class="flex justify-between text-gray-500 text-sm mb-4">
+       <span>
+        Level 25
+       </span>
+       <span>
+        Level 26
+       </span>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg mb-4">
+       <div class="flex items-center mb-2">
+        <i class="fas fa-info-circle text-blue-500 text-xl mr-2">
+        </i>
+        <h3 class="text-black font-semibold">
+         Travel Tip
+        </h3>
+       </div>
+       <p style="color: black;">
+        Explore more of Kerala's destinations to earn bonus points. Complete activities in Munnar or
+                        Wayanad to earn 2x points this month!
+       </p>
+      </div>
+      <div class="flex justify-between mb-4">
+       <button class="flex-1 text-gray-500 py-2 border-b-2 border-blue-500 font-semibold pop-out">
+        Tickets
+       </button>
+       <button class="flex-1 text-center py-2 text-gray-500 pop-out">
+        Experiences
+       </button>
+       <button class="flex-1 text-center py-2 text-gray-500 pop-out">
+        Souvenirs
+       </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+       <div class="bg-white p-4 rounded-lg shadow">
+        <img alt="Bus Ticket" class="rounded-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/MY7G4bjWkmu3Rc8iqRaoTyRTSMYe7-bjKIN6kNPNcsw.jpg" width="600"/>
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="text-black font-semibold">
+          Bus Ticket
+         </h4>
+         <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full">
+          500 pts
+         </span>
+        </div>
+        <p class="text-gray-500 mb-4">
+         Redeem your points for a bus ticket to explore Kerala.
+        </p>
+        <button class="w-full bg-blue-500 text-white py-2 rounded-lg redeem-btn pop-out" data-points="500">
+         Redeem
+        </button>
+       </div>
+       <div class="bg-white p-4 rounded-lg shadow">
+        <img alt="Train Ticket" class="rounded-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/zjw1LpxkzMteytHADHKxZqqsc338tleweJebXXURn-k.jpg" width="600"/>
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="text-black font-semibold">
+          Train Ticket
+         </h4>
+         <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full">
+          1000 pts
+         </span>
+        </div>
+        <p class="text-gray-500 mb-4">
+         Redeem your points for a train ticket to explore Kerala.
+        </p>
+        <button class="w-full bg-blue-500 text-white py-2 rounded-lg redeem-btn pop-out" data-points="1000">
+         Redeem
+        </button>
+       </div>
+       <div class="bg-white p-4 rounded-lg shadow">
+        <img alt="Flight Ticket" class="rounded-lg mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/uEBpOPvZQnfKGsm9OE7uIQ-_UHlHcB-43T-NkbiTEBw.jpg" width="600"/>
+        <div class="flex justify-between items-center mb-2">
+         <h4 class="text-black font-semibold">
+          Flight Ticket
+         </h4>
+         <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded-full">
+          2000 pts
+         </span>
+        </div>
+        <p class="text-gray-500 mb-4">
+         Redeem your points for a flight ticket to explore Kerala.
+        </p>
+        <button class="w-full bg-blue-500 text-white py-2 rounded-lg redeem-btn pop-out" data-points="2000">
+         Redeem
+        </button>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- Right Column -->
+    <div class="w-full lg:w-1/3">
+     <div class="bg-white p-4 rounded-lg shadow mb-4">
+      <div class="flex items-center mb-4">
+       <i class="fas fa-calendar-alt text-blue-500 text-2xl mr-2">
+       </i>
+       <h2 class="text-black text-xl font-semibold">
+        Daily Login Rewards
+       </h2>
+      </div>
+      <p class="text-gray-500 mb-4">
+       Log in daily to earn travel points and vouchers. Current streak:
+       <span id="streak">
+        0
+       </span>
+       days
+      </p>
+      <div class="flex items-center justify-between mb-4">
+       <span class="text-gray-500">
+        Weekly Progress
+       </span>
+       <span class="text-gray-500">
+        Day
+        <span id="day">
+         0
+        </span>
+        /7
+       </span>
+      </div>
+      <div class="bg-gray-200 h-2 rounded-full mb-4">
+       <div class="bg-blue-500 h-2 rounded-full" id="progress-bar" style="width: 0%;">
+       </div>
+      </div>
+      <div class="grid grid-cols-7 gap-2 mb-4">
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-1">
+         50
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 1
+        </p>
+       </div>
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-2">
+         <i class="fas fa-ticket-alt">
+         </i>
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 2
+        </p>
+       </div>
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-3">
+         100
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 3
+        </p>
+       </div>
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-4">
+         <i class="fas fa-ticket-alt">
+         </i>
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 4
+        </p>
+       </div>
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-5">
+         150
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 5
+        </p>
+       </div>
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-6">
+         <i class="fas fa-ticket-alt">
+         </i>
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 6
+        </p>
+       </div>
+       <div class="text-center">
+        <div class="bg-yellow-100 text-yellow-500 rounded-full w-10 h-10 flex items-center justify-center mx-auto mb-2" id="reward-day-7">
+         300
+        </div>
+        <p class="text-sm text-gray-500">
+         Day 7
+        </p>
+       </div>
+      </div>
+      <button class="w-full bg-blue-500 text-white py-2 rounded-lg pop-out" id="claim-reward">
+       Claim Daily Reward
+      </button>
+     </div>
+     <div class="bg-white p-4 rounded-lg shadow mb-4">
+      <div class="flex items-center mb-4">
+       <i class="fas fa-ticket-alt text-blue-500 text-2xl mr-2">
+       </i>
+       <h2 class="text-black  text-2xl font-semibold">
+        My Vouchers
+       </h2>
+      </div>
+      <div class="text-center" id="vouchers-list">
+       <div class="bg-gray-200 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-exclamation-circle text-gray-500 text-3xl">
+        </i>
+       </div>
+       <p class="text-gray-500">
+        You don't have any vouchers yet. Login daily or complete activities to earn
+                        vouchers!
+       </p>
+      </div>
+     </div>
+     
+       <a class="text-blue-500" href="#">
+        View All
+       </a>
+      </div>
+      <!-- Add top explorers content here -->
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- Popup Modal -->
+  <div class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" id="popup-modal">
+   <div class="bg-white p-4 rounded-lg shadow-lg">
+    <h2 class="text-green-500 text-2xl font-semibold mb-4">
+     Reward Claimed!
+    </h2>
+    <p class="text-gray-500 mb-4" id="reward-message">
+    </p>
+    <button class="bg-blue-500 text-white py-2 px-4 rounded-lg" id="close-popup">
+     Close
+    </button>
+   </div>
+  </div>
+  <!-- Redeem Modal -->
+  <div class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden" id="redeem-modal">
+   <div class="bg-white p-4 rounded-lg shadow-lg">
+    <h2 class="text-xl font-semibold mb-4">
+     Redeem Points
+    </h2>
+    <form id="redeem-form">
+     <div class="mb-4">
+      <label class="block text-gray-700">
+       Name
+      </label>
+      <input class="w-full px-3 py-2 border rounded-lg" id="user-name" required="" type="text"/>
+     </div>
+     <div class="mb-4">
+      <label class="block text-gray-700">
+       Email
+      </label>
+      <input class="w-full px-3 py-2 border rounded-lg" id="user-email" required="" type="email"/>
+     </div>
+     <div class="mb-4">
+      <label class="block text-gray-700">
+       Phone
+      </label>
+      <input class="w-full px-3 py-2 border rounded-lg" id="user-phone" required="" type="tel"/>
+     </div>
+     <div class="mb-4">
+      <label class="block text-gray-700">
+       Address
+      </label>
+      <textarea class="w-full px-3 py-2 border rounded-lg" id="user-address" required=""></textarea>
+     </div>
+     <input id="redeem-points" type="hidden"/>
+     <button class="bg-blue-500 text-white py-2 px-4 rounded-lg pop-out" type="submit">
+      Redeem
+     </button>
+     <button class="bg-gray-500 text-white py-2 px-4 rounded-lg ml-2 pop-out" id="close-redeem" type="button">
+      Cancel
+     </button>
+    </form>
+   </div>
+  </div>
+  <!-- Success Message -->
+  <div class="fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hidden" id="successMessage">
+    Redeemed successfully!
+    <button class="ml-2 bg-white text-green-500 px-2 py-1 rounded" onclick="closeSuccessMessage()">Close</button>
+  </div>
+  <script>
+   document.getElementById('claim-reward').addEventListener('click', function () {
+        const dayElement = document.getElementById('day');
+        const streakElement = document.getElementById('streak');
+        const progressBar = document.getElementById('progress-bar');
+        const availablePointsElement = document.getElementById('available-points');
+        const vouchersList = document.getElementById('vouchers-list');
+        const currentDay = parseInt(dayElement.innerText);
+        const currentStreak = parseInt(streakElement.innerText);
+        const availablePoints = parseInt(availablePointsElement.innerText);
+
+        if (currentDay < 7) {
+            const nextDay = currentDay + 1;
+            dayElement.innerText = nextDay;
+            streakElement.innerText = currentStreak + 1;
+
+            // Update progress bar
+            progressBar.style.width = `${(nextDay / 7) * 100}%`;
+
+            // Show reward message
+            const rewardMessage = document.getElementById('reward-message');
+            const rewardElement = document.getElementById(`reward-day-${nextDay}`);
+            const rewardText = rewardElement.innerHTML.includes('fa-ticket-alt') ? 'Voucher' : `${rewardElement.innerText} pts`;
+            rewardMessage.innerText = `You have claimed: ${rewardText}`;
+            rewardElement.classList.add('opacity-50');
+
+            // Update available points or vouchers
+            if (rewardText.includes('pts')) {
+                const points = parseInt(rewardText.split(' ')[0]);
+                availablePointsElement.innerText = availablePoints + points;
+            } else {
+                const voucherCount = vouchersList.querySelectorAll('.voucher-item').length + 1;
+                const voucherItem = document.createElement('div');
+                voucherItem.classList.add('voucher-item', 'bg-gray-200', 'rounded-full', 'w-16', 'h-16', 'flex', 'items-center', 'justify-center', 'mx-auto', 'mb-4');
+                voucherItem.innerHTML = `<i class="fas fa-ticket-alt text-blue-500 text-3xl"></i>`;
+                vouchersList.innerHTML = '';
+                vouchersList.appendChild(voucherItem);
+                vouchersList.innerHTML += `<p class="text-gray-500">You have ${voucherCount} voucher(s)!</p>`;
+            }
+
+            // Show popup
+            document.getElementById('popup-modal').classList.remove('hidden');
+        } else {
+            // Reset streak and day after 7 days
+            dayElement.innerText = 0;
+            streakElement.innerText = 0;
+            progressBar.style.width = '0%';
+            document.querySelectorAll('.reward-day').forEach(el => el.classList.remove('opacity-50'));
+        }
+    });
+
+    document.getElementById('close-popup').addEventListener('click', function () {
+        document.getElementById('popup-modal').classList.add('hidden');
+    });
+
+    document.querySelectorAll('.redeem-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const points = this.getAttribute('data-points');
+            document.getElementById('redeem-points').value = points;
+            document.getElementById('redeem-modal').classList.remove('hidden');
+        });
+    });
+
+    document.getElementById('close-redeem').addEventListener('click', function () {
+        document.getElementById('redeem-modal').classList.add('hidden');
+    });
+
+    document.getElementById('redeem-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const points = parseInt(document.getElementById('redeem-points').value);
+        const availablePointsElement = document.getElementById('available-points');
+        const availablePoints = parseInt(availablePointsElement.innerText);
+
+        if (availablePoints >= points) {
+            availablePointsElement.innerText = availablePoints - points;
+            document.getElementById('redeem-modal').classList.add('hidden');
+            const redemptionStatus = document.getElementById('redemption-status');
+            redemptionStatus.classList.remove('hidden');
+            setTimeout(() => {
+                redemptionStatus.classList.add('hidden');
+            }, 3000);
+            showSuccessMessage();
+        } else {
+            alert('Not enough points to redeem.');
+        }
+    });
+
+    function showSuccessMessage() {
+        const successMessage = document.getElementById('successMessage');
+        successMessage.classList.remove('hidden');
+        successMessage.classList.add('slide-in');
+        setTimeout(() => {
+            successMessage.classList.remove('slide-in');
+            successMessage.classList.add('slide-out');
+            setTimeout(() => {
+                successMessage.classList.add('hidden');
+                successMessage.classList.remove('slide-out');
+            }, 500);
+        }, 2000);
+    }
+
+    function closeSuccessMessage() {
+        const successMessage = document.getElementById('successMessage');
+        successMessage.classList.add('hidden');
+    }
+  </script>
+ </body>
+</html>
+{% endblock %}

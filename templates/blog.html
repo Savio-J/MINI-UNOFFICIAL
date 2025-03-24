@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kerala Travel Blog</title>
+    {% block extra_css %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        .comment-input-wrapper {
+            position: relative;
+        }
+        .comment-input {
+            padding-right: 40px; /* Space for the icon */
+            color: #333;
+        }
+        .send-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #3B82F6; /* Tailwind's blue-500 */
+        }
+    </style>
+    {% endblock %}
+</head>
+{% block content %}
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800">Kerala Travel Blog</h1>
+            <p class="text-lg text-gray-600">Discover God's Own Country through our collection of travel stories from Kerala</p>
+        </div>
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="writeBlogButton" class="flex items-center space-x-2 bg-blue-500 text-white rounded-full py-2 px-4 hover:bg-blue-600">
+                <i class="fas fa-pen"></i>
+                <span>Write a Blog</span>
+            </button>
+        </div>
+        <div class="flex justify-center mb-8">
+            <div class="bg-gray-100 rounded-full p-1">
+                <button class="px-4 py-2 text-gray-700 rounded-full bg-white" id="allPostsButton">All Posts</button>
+            </div>
+        </div>
+        <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- User-generated posts will appear here -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="blogModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Write a Blog</h2>
+                <button id="closeModalButton" class="text-gray-600 hover:text-gray-800">&times;</button>
+            </div>
+            <form id="blogForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Title</label>
+                    <input class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="title" type="text" placeholder="Blog Title" required/>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="content">Content</label>
+                    <textarea class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="content" rows="5" placeholder="Write your blog content here..." required></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="photos">Upload Photos</label>
+                    <input class="w-full border border-gray-300 rounded py-2 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" id="photos" type="file" multiple/>
+                </div>
+                <div class="flex justify-end">
+                    <button class="bg-blue-500 text-white rounded-full py-2 px-4 hover:bg-blue-600" type="submit">Publish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Replace the entire script section with this updated version -->
+<script>
+    // Initialize posts
+    let posts = [];
+
+    // DOM elements
+    const writeBlogButton = document.getElementById('writeBlogButton');
+    const closeModalButton = document.getElementById('closeModalButton');
+    const blogModal = document.getElementById('blogModal');
+    const blogForm = document.getElementById('blogForm');
+    const postsContainer = document.getElementById('postsContainer');
+    const allPostsButton = document.getElementById('allPostsButton');
+
+    // Event listeners
+    writeBlogButton.addEventListener('click', () => blogModal.classList.remove('hidden'));
+    closeModalButton.addEventListener('click', () => blogModal.classList.add('hidden'));
+    allPostsButton.addEventListener('click', loadPosts);
+
+    // Form submission
+    blogForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('content', document.getElementById('content').value);
+        
+        const photoInput = document.getElementById('photos');
+        if (photoInput.files.length > 0) {
+            formData.append('photo', photoInput.files[0]);
+        }
+
+        try {
+            const response = await fetch('/api/posts', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                blogModal.classList.add('hidden');
+                blogForm.reset();
+                loadPosts();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error creating post: ' + error.message);
+        }
+    });
+
+    // Load posts from server
+    async function loadPosts() {
+        try {
+            const response = await fetch('/api/posts');
+            posts = await response.json();
+            renderPosts(posts);
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        }
+    }
+
+    // Render posts to the page
+    function renderPosts(postsToRender) {
+        postsContainer.innerHTML = '';
+
+        postsToRender.forEach(post => {
+            const postContainer = document.createElement('div');
+            postContainer.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'overflow-hidden');
+
+            // Post image
+            if (post.image_path) {
+                const img = document.createElement('img');
+                img.src = `/static/blog_images/${post.image_path}`;
+                img.alt = post.title;
+                img.classList.add('w-full', 'h-48', 'object-cover');
+                postContainer.appendChild(img);
+            }
+
+            const postContent = document.createElement('div');
+            postContent.classList.add('p-4');
+
+            // Post title
+            const postTitle = document.createElement('h2');
+            postTitle.classList.add('text-lg', 'font-semibold', 'text-gray-800');
+            postTitle.textContent = post.title;
+            postContent.appendChild(postTitle);
+
+            // Post content
+            const postText = document.createElement('p');
+            postText.classList.add('text-gray-600', 'mb-2');
+            postText.textContent = post.content;
+            postContent.appendChild(postText);
+
+            // Post meta (author and date)
+            const postMeta = document.createElement('p');
+            postMeta.classList.add('text-sm', 'text-gray-500', 'mb-4');
+            postMeta.textContent = `Posted by ${post.username} on ${post.created_at}`;
+            postContent.appendChild(postMeta);
+
+            // Like Button
+            const likeButton = document.createElement('button');
+            likeButton.classList.add('flex', 'items-center', 'space-x-2', 'mr-4', 
+                                    post.liked ? 'text-red-500' : 'text-gray-600');
+            likeButton.innerHTML = `
+                <i class="${post.liked ? 'fas' : 'far'} fa-heart"></i>
+                <span>${post.likes} Like${post.likes !== 1 ? 's' : ''}</span>
+            `;
+            likeButton.addEventListener('click', async () => {
+                const response = await fetch(`/api/posts/${post.id}/like`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    post.liked = data.liked;
+                    post.likes = data.likes;
+                    renderPosts(postsToRender);
+                }
+            });
+            postContent.appendChild(likeButton);
+
+            // Comment Button
+            const commentButton = document.createElement('button');
+            commentButton.classList.add('flex', 'items-center', 'space-x-2', 'text-gray-600');
+            commentButton.innerHTML = `
+                <i class="fas fa-comment"></i>
+                <span>Comment (${post.comments.length})</span>
+            `;
+            commentButton.addEventListener('click', () => {
+                const commentBox = postContainer.querySelector('.comment-box');
+                commentBox.classList.toggle('hidden');
+            });
+            postContent.appendChild(commentButton);
+
+            // Comment Box
+            const commentBox = document.createElement('div');
+            commentBox.classList.add('comment-box', 'hidden', 'mt-4', 'p-4', 'border-t', 'border-gray-200');
+            
+            // Comments list
+            const commentsList = document.createElement('div');
+commentsList.classList.add('mb-4', 'space-y-4');
+
+post.comments.forEach(comment => {
+    const commentElement = document.createElement('div');
+    commentElement.classList.add('flex', 'items-start', 'gap-3');
+    
+    // Profile picture container
+    const profilePicContainer = document.createElement('div');
+    profilePicContainer.classList.add('flex-shrink-0');
+    
+    // Profile picture - using the same format as your example
+    if (comment.profile_pic) {
+        profilePicContainer.innerHTML = `
+            <img class="rounded-full w-8 h-8 object-cover" 
+                 src="/static/uploads/${comment.profile_pic}" 
+                 alt="${comment.username}'s profile">
+        `;
+    } else {
+        // Fallback avatar
+        profilePicContainer.innerHTML = `
+            <div class="rounded-full w-8 h-8 bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-user text-gray-500 text-sm"></i>
+            </div>
+        `;
+    }
+    
+    // Comment content
+    const commentContent = document.createElement('div');
+    commentContent.classList.add('flex-1');
+    commentContent.innerHTML = `
+        <div class="flex items-baseline gap-2">
+            <p class="font-semibold text-gray-800">${comment.username}</p>
+            <p class="text-xs text-gray-500">${comment.created_at}</p>
+        </div>
+        <p class="text-gray-700 mt-1">${comment.content}</p>
+    `;
+    
+    commentElement.appendChild(profilePicContainer);
+    commentElement.appendChild(commentContent);
+    commentsList.appendChild(commentElement);
+});
+
+commentBox.appendChild(commentsList);
+
+            // Comment input
+            const commentInputWrapper = document.createElement('div');
+            commentInputWrapper.classList.add('comment-input-wrapper');
+
+            const commentInput = document.createElement('input');
+            commentInput.type = 'text';
+            commentInput.placeholder = 'Add a comment...';
+            commentInput.classList.add('comment-input', 'w-full', 'border', 'border-gray-300', 'rounded', 'py-2', 'px-4', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500');
+
+            const sendButton = document.createElement('i');
+            sendButton.classList.add('fas', 'fa-paper-plane', 'send-button');
+            sendButton.addEventListener('click', async () => {
+                const commentText = commentInput.value.trim();
+                if (commentText) {
+                    const formData = new FormData();
+                    formData.append('content', commentText);
+                    
+                    const response = await fetch(`/api/posts/${post.id}/comment`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        post.comments.push(data.comment);
+                        renderPosts(postsToRender);
+                    }
+                }
+            });
+
+            commentInputWrapper.appendChild(commentInput);
+            commentInputWrapper.appendChild(sendButton);
+            commentBox.appendChild(commentInputWrapper);
+            postContent.appendChild(commentBox);
+
+            postContainer.appendChild(postContent);
+            postsContainer.appendChild(postContainer);
+        });
+    }
+
+    // Load posts when page loads
+    document.addEventListener('DOMContentLoaded', loadPosts);
+</script>
+</body>
+</html>
+{% endblock %}
